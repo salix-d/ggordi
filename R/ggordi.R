@@ -17,7 +17,7 @@
 #' @param sites.pal               optional color/fill palette for sites
 #' @param sites.shape.type        type of shape to get for points : 'solid', 'stoke', 'fill' or 'lines' (see function shape_palette for which pch is in which)
 #' @param sites.size              optional size for points (not an aes for now)
-#' @param sites.alpha              alpha transparency value for the points (0 = transparent, 1 = opaque)
+#' @param sites.alpha             alpha transparency value for the points (0 = transparent, 1 = opaque)
 #' species/loadings args
 #' @param draw.arrows             logical,draw arrows for species?
 #' @param arrow.color             color of those arrows
@@ -42,37 +42,38 @@
 #' @export
 #'
 ggordi = function(pcobj, choices = 1:2, scale = 1,
-                     sites.geom = 'point',
-                     sites.shape = NULL,
-                     sites.leg.title.s = NULL,
-                     sites.fill = NULL,
-                     sites.leg.title.f = NULL,
-                     sites.color = NULL,
-                     sites.leg.title.c = NULL,
-                     sites.labs = NULL,
-                     sites.pal =  NULL,
-                     sites.shape.type = 'fill',
-                     sites.size = NULL,
+                  sites.geom = 'point',
+                  sites.shape = NULL,
+                  sites.leg.title.s = NULL,
+                  sites.fill = NULL,
+                  sites.leg.title.f = NULL,
+                  sites.color = NULL,
+                  sites.leg.title.c = NULL,
+                  sites.labs = NULL,
+                  sites.pal =  NULL,
+                  sites.shape.type = 'fill',
+                  sites.size = NULL,
+                  sites.alpha = 0.25,
 
-                     draw.arrows = T,
-                     arrow.color = rgb(0,0,0,0.7),
-                     species.labs = NULL,
-                     species.geom = 'text',
-                     species.labs.size = 4,
-                     species.labs.adjust = 0.6,
+                  draw.arrows = T,
+                  arrow.color = rgb(0,0,0,0.7),
+                  species.labs = NULL,
+                  species.geom = 'text',
+                  species.labs.size = 4,
+                  species.labs.adjust = 0.6,
 
-                     ellipse.groups = NULL,
-                     ellipse = T,
-                     ellipse.labs = T,
-                     ellipse.level = 0.69,
-                     ellipse.show.legend = NA,
-                     ellipse.type = 'norm',
-                     ellipse.size = 1,
-                     ellipse.alpha = 0.15,
-                     lty.pal =NULL,
+                  ellipse.groups = NULL,
+                  ellipse = T,
+                  ellipse.labs = T,
+                  ellipse.level = 0.69,
+                  ellipse.show.legend = NA,
+                  ellipse.type = 'norm',
+                  ellipse.size = 1,
+                  ellipse.alpha = 0.15,
+                  lty.pal =NULL,
 
-                     axis.lang = 'EN',
-                     draw.axis = T
+                  axis.lang = 'EN',
+                  draw.axis = T
 ){
   scores = pcobj$x
   exp_var = summary(pcobj)$importance[2,choices]
@@ -92,8 +93,6 @@ ggordi = function(pcobj, choices = 1:2, scale = 1,
   names(y) = c('xend', 'yend')
   y$x = 0
   y$y = 0
-  y$hjust = with(y, (1 - species.labs.adjust * sign(xend2)) / 2)
-  y$angle <- with(y, (180/pi) * atan(yend / xend))
   y$label = if(!is.null(species.labs)) species.labs else as.character(dimnames(y)[[1L]])
 
   #plot axis labels
@@ -104,21 +103,35 @@ ggordi = function(pcobj, choices = 1:2, scale = 1,
   rangx2 = unsigned.range(x[, 2L])
   rangy1 = unsigned.range(y[, 1L])
   rangy2 = unsigned.range(y[, 2L])
-  (xlim = ylim = rangx1 = rangx2 = range(rangx1, rangx2))
+  xlim = ylim = rangx1 = rangx2 = range(rangx1, rangx2)
 
   #get ratio to scale arrows
-  (ratio = max(rangy1/rangx1, rangy2/rangx2))
+  ratio = max(rangy1/rangx1, rangy2/rangx2)
   y$xend2 = y$xend / ratio * 0.8
   y$yend2 = y$yend / ratio * 0.8
   y$hjust = with(y, (1 - species.labs.adjust * sign(xend2)) / 2)
+  y$angle <- with(y, (180/pi) * atan(yend / xend))
+
+  if(is.null(sites.leg.title.s)) sites.leg.title.s = as.character(substitute(sites.shape))
+  if(is.null(sites.leg.title.f)) sites.leg.title.f = as.character(substitute(sites.fill))
+  if(is.null(sites.leg.title.c)) sites.leg.title.c = as.character(substitute(sites.color))
+
+  if(is.null(sites.pal)){
+    k = if(!is.null(sites.color)) length(levels(sites.color)) else if(!is.null(sites.fill)) length(levels(sites.fill)) else 1
+    sites.pal = get_palette("Set2", k)
+    sites.pal.m = get_palette("Dark2", k)
+  }
 
   #draw plot
-  g <- ggordi_base(x, draw.axis)
-  g <- ggordi_sites(g, sites.geom, sites.alpha, sites.shape.type, sites.pal, sites.leg.title.s, sites.leg.title.f, sites.leg.title.c)
-  g <- ggordi_species(g, y, draw.arrows, arrow.color, species.labs.size, species.labs.adjust, species.geom)
+  g <- ggordi_base(x, draw.axis, axis.labels)
   for(ellipse.group in ellipse.groups){
     ellipse.group = x[,ellipse.group]
     g <- ggordi_ellipse.fill(g, ellipse.group, ellipse.show.legend, ellipse.type, ellipse.level, ellipse.size, ellipse.alpha, sites.pal)
+  }
+  g <- ggordi_sites(g, x, sites.geom, sites.alpha, sites.shape.type, sites.pal, sites.leg.title.s, sites.leg.title.f, sites.leg.title.c)
+  g <- ggordi_species(g, y, draw.arrows, arrow.color, species.labs.size, species.labs.adjust, species.geom, ratio)
+  for(ellipse.group in ellipse.groups){
+    ellipse.group = x[,ellipse.group]
     g <- ggordi_ellipse(g, ellipse.group, ellipse.show.legend, ellipse.type, ellipse.level, ellipse.size, sites.pal, lty.pal)
     if(ellipse.labs){
       cn = aggregate(setNames(lapply(x[1:2], c), c('x', 'y')), by = setNames(list(ellipse.group), 'label'), mean)

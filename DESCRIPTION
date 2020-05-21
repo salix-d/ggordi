@@ -10,7 +10,7 @@ URL: http://github.com/salix-d/ggordi
 Encoding: UTF-8
 LazyData: true
 Depends:
-    ggplot2, scales, ggnewscale
+    ggplot2, scales, ggnewscale, ggpubr
 Collate:
     'ggordi.R'
     'ggordi_base.R'
