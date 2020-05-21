@@ -25,6 +25,7 @@
 #' @param species.labs            labels for species
 #' @param species.labs.size       label size for species
 #' @param species.labs.adjust     adjust ddistance between label and arrow
+#' @param species.labs.angled     logical, should the label text be at the same angle as the arrow?
 #' ellipse args
 #' @param ellipse                 logical, draw ellipse?
 #' @param ellipse.groups          any of 'fill', 'color' or 'shape'; group(s) to draw ellipses for
@@ -61,6 +62,7 @@ ggordi = function(pcobj, choices = 1:2, scale = 1,
                   species.geom = 'text',
                   species.labs.size = 4,
                   species.labs.adjust = 0.6,
+                  species.labs.angled = T,
 
                   ellipse.groups = NULL,
                   ellipse = T,
@@ -110,7 +112,7 @@ ggordi = function(pcobj, choices = 1:2, scale = 1,
   y$xend2 = y$xend / ratio * 0.8
   y$yend2 = y$yend / ratio * 0.8
   y$hjust = with(y, (1 - species.labs.adjust * sign(xend2)) / 2)
-  y$angle <- with(y, (180/pi) * atan(yend / xend))
+  y$angle <-if(species.labs.angled) with(y, (180/pi) * atan(yend / xend)) else 0
 
   if(is.null(sites.leg.title.s)) sites.leg.title.s = as.character(substitute(sites.shape))
   if(is.null(sites.leg.title.f)) sites.leg.title.f = as.character(substitute(sites.fill))

@@ -3,7 +3,7 @@ Type: Package
 Title: ggplot2 based ordination plots
 Version: 0.1.0
 Author: Salix Dubois
-Maintainer: Salix Dubois <dubois.salix@courrier.uqam.ca>
+Maintainer: Salix Dubois <salixdubois+git@gmail.com>
 Description: Allows customisation of ordination plots using ggplot2.
 License: GPL-2
 URL: http://github.com/salix-d/ggordi
