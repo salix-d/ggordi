@@ -1,0 +1,24 @@
+Package: ggordi
+Type: Package
+Title: ggplot2 based ordination plots
+Version: 0.1.0
+Author: Salix Dubois
+Maintainer: Salix Dubois <dubois.salix@courrier.uqam.ca>
+Description: Allows customisation of ordination plots using ggplot2.
+License: GPL-2
+URL: http://github.com/salix-d/ggordi
+Encoding: UTF-8
+LazyData: true
+Depends:
+    ggplot2, scales, ggnewscale
+Collate:
+    'ggordi.R'
+    'ggordi_base.R'
+    'ggordi_sites.R'
+    'ggordi_species.R'
+    'ggordi_ellipse.R'
+    'ggordi_ellipse.fill.R'
+    'ggordi_ellipse.labs.R'
+    'unsigned.range.R'
+    'shape_palette.R'
+RoxygenNote: 7.1.0
