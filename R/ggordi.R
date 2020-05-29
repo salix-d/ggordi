@@ -122,6 +122,8 @@ ggordi = function(pcobj, choices = 1:2, scale = 1,
     k = if(!is.null(sites.color)) length(levels(sites.color)) else if(!is.null(sites.fill)) length(levels(sites.fill)) else 1
     sites.pal = get_palette("Set2", k)
     sites.pal.m = get_palette("Dark2", k)
+  } else {
+    sites.pal.m = muted(sites.pal)
   }
 
   #draw plot
