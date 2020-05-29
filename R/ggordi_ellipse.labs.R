@@ -7,7 +7,7 @@
 #' @export
 
 #ellipse label at centroïds
-ggordi_ellipse.labs = function(g, centroids.df, ellipse.group, sites.pal){
+ggordi_ellipse.labs = function(g, centroids.df, ellipse.group, sites.pal.m){
   g <- g + geom_text(data = centroids.df, aes(x = x, y = y, label = label), color = sites.pal.m, fontface = 'bold')
   return(g)
 }

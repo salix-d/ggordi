@@ -137,7 +137,7 @@ ggordi = function(pcobj, choices = 1:2, scale = 1,
     g <- ggordi_ellipse(g, ellipse.group, ellipse.show.legend, ellipse.type, ellipse.level, ellipse.size, sites.pal, lty.pal)
     if(ellipse.labs){
       cn = aggregate(setNames(lapply(x[1:2], c), c('x', 'y')), by = setNames(list(ellipse.group), 'label'), mean)
-      g <- ggordi_ellipse.labs(g, cn, ellipse.group, sites.pal)
+      g <- ggordi_ellipse.labs(g, cn, ellipse.group, sites.pal.m)
     }
   }
   return(g)
