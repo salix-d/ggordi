@@ -27,4 +27,3 @@ ggordi_species = function(g, y, draw.arrows, arrow.color, species.labs.size, spe
   }
   return(g)
 }
-devtools::install_github()
